@@ -10,19 +10,19 @@ import json
 @api_view(['GET', 'POST'])
 def academic_histories(request):
     db = connect("AHistory")
-
     items = [x for x in db.find({},{'_id' : 0})] 
     if request.method == 'GET':
         return Response(items)
     elif request.method == 'POST':
         try:
-            if 'id' in request.data.keys():
+            if not 'id' in request.data.keys():
+                return Response({'error':'id missing'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            elif request.data['id'] in [item['id'] for item in items]:
                 return Response({'error':'id already created'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             db.insert_one(request.data)
             return Response(status=status.HTTP_201_CREATED)
         except:
             return Response({'error':'Failed to insert'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -43,6 +43,6 @@ def academic_history(request, id):
     elif request.method == 'DELETE':
         try:
             db.delete_one({'id':id})
-            return Response(status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_404_NOT_FOUND)
         except:
             return Response({'error':'Failed to delete'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
