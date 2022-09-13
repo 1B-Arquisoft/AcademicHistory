@@ -16,9 +16,9 @@ def academic_histories(request):
         return Response(items)
     elif request.method == 'POST':
         try:
-            db.insert_one(request.data)
             if 'id' in request.data.keys():
                 return Response({'error':'id already created'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            db.insert_one(request.data)
             return Response(status=status.HTTP_201_CREATED)
         except:
             return Response({'error':'Failed to insert'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -43,6 +43,6 @@ def academic_history(request, id):
     elif request.method == 'DELETE':
         try:
             db.delete_one({'id':id})
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_200_OK)
         except:
             return Response({'error':'Failed to delete'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
