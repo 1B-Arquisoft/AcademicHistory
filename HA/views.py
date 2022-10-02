@@ -33,7 +33,7 @@ def academic_history(request, id):
     if request.method == 'GET':
         if len(item) == 0:
             return Response({'error':'element missing'}, status=status.HTTP_404_NOT_FOUND)
-        return Response(item[0])
+        return Response({'data':item[0]})
     elif request.method == 'PUT':
         try:
             db.update_one({'id':id}, {'$set': request.data})
