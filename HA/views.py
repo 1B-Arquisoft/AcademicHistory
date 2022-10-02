@@ -12,7 +12,7 @@ def academic_histories(request):
     db = connect("AHistory")
     items = [x for x in db.find({},{'_id' : 0})] 
     if request.method == 'GET':
-        return Response(items)
+        return Response({"data",items})
     elif request.method == 'POST':
         try:
             if not 'id' in request.data.keys():
