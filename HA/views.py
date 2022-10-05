@@ -35,14 +35,23 @@ def academic_history(request, id):
             return Response({'error':'element missing'}, status=status.HTTP_404_NOT_FOUND)
         return Response({'data':item[0]})
     elif request.method == 'PUT':
-        try:
-            db.update_one({'id':id}, {'$set': request.data})
-            return Response(status=status.HTTP_200_OK)
-        except:
-            return Response({'error':'Failed to update'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        updateData = request.data
+        if updateData.Materias != None:
+            print("Materias", updateData.Materias)
+            try:
+                db.update_one({'id':id}, {'$push': updateData})
+                return Response(status=status.HTTP_200_OK)
+            except:
+                return Response({'error':'Failed to update'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            try:
+                db.update_one({'id':id}, {'$set': updateData})
+                return Response(status=status.HTTP_200_OK)
+            except:
+                return Response({'error':'Failed to update'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     elif request.method == 'DELETE':
         try:
             db.delete_one({'id':id})
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_200_OK)
         except:
             return Response({'error':'Failed to delete'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
