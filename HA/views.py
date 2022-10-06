@@ -39,7 +39,7 @@ def academic_history(request, id):
         print(updateData)
         if "Materias" in updateData.keys():
             try:
-                db.update_one({'id':id}, {'$push': {'Materias': updateData['Materias']}})
+                db.update_one({'id':id}, {'$push': {'Materias': {'$each': updateData['Materias']}}})
                 return Response(status=status.HTTP_200_OK)
             except:
                 return Response({'error':'Failed to update'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
